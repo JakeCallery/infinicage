@@ -1,24 +1,39 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import "./style.css";
+import Engine from "./engine/Engine.ts";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
+const step = (evt: MouseEvent, engine: Engine) => {
+  console.log("Step");
+  if (engine.isRunning) engine.pause();
+  engine.update(performance.now(), { manualUpdate: true });
+};
+
+const run = (evt: MouseEvent, engine: Engine) => {
+  console.log("Run");
+  engine.update();
+};
+
+const engine: Engine = Engine.getInstance();
+
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+  <div xmlns="http://www.w3.org/1999/html">
+    <canvas id="mainCanvas" height="200px" width="200px">
+      Super fun canvas
+    </canvas>
+    <button id="stepButton"">Step</button>
+    <button id="runButton"">Run</button>
   </div>
-`
+`;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+document.onreadystatechange = () => {
+  console.log("Doc Ready State: ", document.readyState);
+  if (document.readyState === "complete") {
+    const stepButton = document.getElementById(
+      "stepButton",
+    ) as HTMLButtonElement;
+    const runButton = document.getElementById("runButton") as HTMLButtonElement;
+
+    engine.init(document.getElementById("mainCanvas") as HTMLCanvasElement);
+    stepButton.addEventListener("click", (evt) => step(evt, engine));
+    runButton.addEventListener("click", (evt) => run(evt, engine));
+  }
+};
