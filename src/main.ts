@@ -24,7 +24,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-document.onreadystatechange = () => {
+document.onreadystatechange = async () => {
   console.log("Doc Ready State: ", document.readyState);
   if (document.readyState === "complete") {
     const stepButton = document.getElementById(
@@ -32,7 +32,10 @@ document.onreadystatechange = () => {
     ) as HTMLButtonElement;
     const runButton = document.getElementById("runButton") as HTMLButtonElement;
 
-    engine.init(document.getElementById("mainCanvas") as HTMLCanvasElement);
+    engine.init(
+      document.getElementById("mainCanvas") as HTMLCanvasElement,
+      "nc.png",
+    );
     stepButton.addEventListener("click", (evt) => step(evt, engine));
     runButton.addEventListener("click", (evt) => run(evt, engine));
   }
