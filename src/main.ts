@@ -1,13 +1,13 @@
 import "./style.css";
 import Engine from "./engine/Engine.ts";
 
-const step = (evt: MouseEvent, engine: Engine) => {
+const step = (engine: Engine) => {
   console.log("Step");
   if (engine.isRunning) engine.pause();
   engine.update(performance.now(), { manualUpdate: true });
 };
 
-const run = (evt: MouseEvent, engine: Engine) => {
+const run = (engine: Engine) => {
   console.log("Run");
   engine.update();
 };
@@ -16,7 +16,7 @@ const engine: Engine = Engine.getInstance();
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div xmlns="http://www.w3.org/1999/html">
-    <canvas id="mainCanvas" height="200px" width="200px">
+    <canvas id="mainCanvas" width="800px" height="600px">
       Super fun canvas
     </canvas>
     <button id="stepButton"">Step</button>
@@ -36,7 +36,7 @@ document.onreadystatechange = async () => {
       document.getElementById("mainCanvas") as HTMLCanvasElement,
       "nc.png",
     );
-    stepButton.addEventListener("click", (evt) => step(evt, engine));
-    runButton.addEventListener("click", (evt) => run(evt, engine));
+    stepButton.addEventListener("click", () => step(engine));
+    runButton.addEventListener("click", () => run(engine));
   }
 };
