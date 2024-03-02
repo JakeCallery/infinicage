@@ -15,6 +15,8 @@ export default class Engine {
   private _numBuffers: number = 0;
 
   private _activeBuffIndex = 0;
+  private _mouseX: number = 0;
+  private _mouseY: number = 0;
 
   private constructor() {}
 
@@ -32,6 +34,12 @@ export default class Engine {
     this._numBuffers = numBuffers;
     this._canvasWidth = canvas.width;
     this._canvasHeight = canvas.height;
+
+    canvas.addEventListener("mousemove", (evt) => {
+      const rect = (evt.target as HTMLCanvasElement).getBoundingClientRect();
+      this._mouseX = Math.floor(evt.clientX - rect.left);
+      this._mouseY = Math.floor(evt.clientY - rect.top);
+    });
 
     this._mainCtx = canvas.getContext("2d");
 
@@ -90,8 +98,8 @@ export default class Engine {
       const srcHeight = this._srcImageData.height;
       const dstWidth = this._canvasWidth;
       // const dstHeight = this._canvasHeight;
-      const xOff = 0;
-      const yOff = 0;
+      const xOff = Math.round(this._mouseX);
+      const yOff = Math.round(this._mouseY);
 
       //Copy cage pix into array
       for (let y = 0; y < srcHeight; y++) {
