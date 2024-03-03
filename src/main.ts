@@ -37,7 +37,7 @@ document.onreadystatechange = async () => {
     engine.init(
       document.getElementById("mainCanvas") as HTMLCanvasElement,
       "nc.png",
-      4,
+      6,
     );
     stepButton.addEventListener("click", () => step(engine));
     runButton.addEventListener("click", () => run(engine));

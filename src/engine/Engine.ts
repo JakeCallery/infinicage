@@ -15,8 +15,8 @@ export default class Engine {
   private _numBuffers: number = 0;
 
   private _activeBuffIndex = 0;
-  private _mouseX: number = 0;
-  private _mouseY: number = 0;
+  private _mouseX: number = -1000;
+  private _mouseY: number = -1000;
 
   private _cursorOffsetX: number = 0;
   private _cursorOffsetY: number = 0;
@@ -50,7 +50,6 @@ export default class Engine {
       const a = new Uint8ClampedArray(
         this._canvasWidth * this._canvasHeight * 4,
       );
-      a.fill(255);
       return new ImageData(a, this._canvasWidth, this._canvasHeight);
     });
 
@@ -95,10 +94,6 @@ export default class Engine {
       this._isRunning = true;
     }
 
-    // if (this._mainCtx && this._imageBitmap && this._srcImageData) {
-    //   this._mainCtx.putImageData(this._srcImageData, 0, 0);
-    // }
-
     if (this._buffers && this._srcImageData) {
       const activeBuffer = this._buffers[this._activeBuffIndex];
       const activeData = activeBuffer.data;
@@ -107,8 +102,16 @@ export default class Engine {
       const srcHeight = this._srcImageData.height;
       const dstWidth = this._canvasWidth;
 
-      const xOff = Math.round(this._mouseX) - this._cursorOffsetX;
-      const yOff = Math.round(this._mouseY) - this._cursorOffsetY;
+      let xOff = Math.round(this._mouseX) - this._cursorOffsetX;
+      let yOff = Math.round(this._mouseY) - this._cursorOffsetY;
+
+      if (xOff < 0) xOff = 0;
+      if (xOff + this._srcImageData.width > this._canvasWidth)
+        xOff = this._canvasWidth - this._srcImageData.width;
+
+      if (yOff < 0) yOff = 0;
+      if (yOff + this._srcImageData.height > this._canvasHeight)
+        yOff = this._canvasHeight - this._srcImageData.height;
 
       //Copy cage pix into array
       for (let y = 0; y < srcHeight; y++) {
