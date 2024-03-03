@@ -9,7 +9,7 @@ const step = (engine: Engine) => {
 
 const run = (engine: Engine) => {
   console.log("Run");
-  engine.update();
+  if (!engine.isRunning) engine.update();
 };
 
 const engine: Engine = Engine.getInstance();
