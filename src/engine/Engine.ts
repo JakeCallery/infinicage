@@ -15,8 +15,8 @@ export default class Engine {
   private _numBuffers: number = 0;
 
   private _activeBuffIndex = 0;
-  private _mouseX: number = -1000;
-  private _mouseY: number = -1000;
+  private _mouseX: number = -1;
+  private _mouseY: number = -1;
 
   private _cursorOffsetX: number = 0;
   private _cursorOffsetY: number = 0;
@@ -37,6 +37,11 @@ export default class Engine {
     this._numBuffers = numBuffers;
     this._canvasWidth = canvas.width;
     this._canvasHeight = canvas.height;
+
+    if (this._mouseX === -1 && this._mouseY === -1) {
+      this._mouseX = this._canvasWidth / 2;
+      this._mouseY = this._canvasHeight / 2;
+    }
 
     canvas.addEventListener("mousemove", (evt) => {
       const rect = (evt.target as HTMLCanvasElement).getBoundingClientRect();

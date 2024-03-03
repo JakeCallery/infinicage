@@ -39,6 +39,7 @@ document.onreadystatechange = async () => {
       "nc.png",
       6,
     );
+    engine.update();
     stepButton.addEventListener("click", () => step(engine));
     runButton.addEventListener("click", () => run(engine));
   }
