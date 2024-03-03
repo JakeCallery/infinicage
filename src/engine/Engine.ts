@@ -21,6 +21,7 @@ export default class Engine {
   private _cursorOffsetX: number = 0;
   private _cursorOffsetY: number = 0;
 
+  private _hasMouseBeenOver: boolean = false;
   private constructor() {}
 
   public static getInstance(): Engine {
@@ -44,6 +45,7 @@ export default class Engine {
     }
 
     canvas.addEventListener("mousemove", (evt) => {
+      this._hasMouseBeenOver = true;
       const rect = (evt.target as HTMLCanvasElement).getBoundingClientRect();
       this._mouseX = Math.floor(evt.clientX - rect.left);
       this._mouseY = Math.floor(evt.clientY - rect.top);
@@ -99,7 +101,7 @@ export default class Engine {
       this._isRunning = true;
     }
 
-    if (this._buffers && this._srcImageData) {
+    if (this._buffers && this._srcImageData && this._hasMouseBeenOver) {
       const activeBuffer = this._buffers[this._activeBuffIndex];
       const activeData = activeBuffer.data;
       const srcData = this._srcImageData.data;
