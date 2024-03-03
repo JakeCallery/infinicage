@@ -18,6 +18,9 @@ export default class Engine {
   private _mouseX: number = 0;
   private _mouseY: number = 0;
 
+  private _cursorOffsetX: number = 0;
+  private _cursorOffsetY: number = 0;
+
   private constructor() {}
 
   public static getInstance(): Engine {
@@ -55,6 +58,8 @@ export default class Engine {
     this._image.addEventListener("load", async () => {
       console.log("Image Loaded");
       if (this._image) {
+        this._cursorOffsetX = Math.round(this._image.width / 2);
+        this._cursorOffsetY = Math.round(this._image.height / 2);
         this._imageBitmap = await createImageBitmap(this._image);
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = this._imageBitmap.width;
@@ -102,13 +107,13 @@ export default class Engine {
       const srcHeight = this._srcImageData.height;
       const dstWidth = this._canvasWidth;
 
-      const xOff = Math.round(this._mouseX);
-      const yOff = Math.round(this._mouseY);
+      const xOff = Math.round(this._mouseX) - this._cursorOffsetX;
+      const yOff = Math.round(this._mouseY) - this._cursorOffsetY;
 
       //Copy cage pix into array
       for (let y = 0; y < srcHeight; y++) {
         for (let x = 0; x < srcWidth; x++) {
-          //TODO: Blend partially transpent pixels
+          //TODO: Blend partially transparent pixels
           if (srcData[y * srcWidth * 4 + x * 4 + 3] !== 0) {
             activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4] =
               srcData[y * srcWidth * 4 + x * 4];
