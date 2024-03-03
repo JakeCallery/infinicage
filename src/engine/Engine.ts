@@ -44,7 +44,11 @@ export default class Engine {
     this._mainCtx = canvas.getContext("2d");
 
     this._buffers = Array.from({ length: numBuffers }, () => {
-      return new ImageData(this._canvasWidth, this._canvasHeight);
+      const a = new Uint8ClampedArray(
+        this._canvasWidth * this._canvasHeight * 4,
+      );
+      a.fill(255);
+      return new ImageData(a, this._canvasWidth, this._canvasHeight);
     });
 
     this._image = new Image();
@@ -97,21 +101,24 @@ export default class Engine {
       const srcWidth = this._srcImageData.width;
       const srcHeight = this._srcImageData.height;
       const dstWidth = this._canvasWidth;
-      // const dstHeight = this._canvasHeight;
+
       const xOff = Math.round(this._mouseX);
       const yOff = Math.round(this._mouseY);
 
       //Copy cage pix into array
       for (let y = 0; y < srcHeight; y++) {
         for (let x = 0; x < srcWidth; x++) {
-          activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 0] =
-            srcData[y * srcWidth * 4 + x * 4 + 0];
-          activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 1] =
-            srcData[y * srcWidth * 4 + x * 4 + 1];
-          activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 2] =
-            srcData[y * srcWidth * 4 + x * 4 + 2];
-          activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 3] =
-            srcData[y * srcWidth * 4 + x * 4 + 3];
+          //TODO: Blend partially transpent pixels
+          if (srcData[y * srcWidth * 4 + x * 4 + 3] !== 0) {
+            activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4] =
+              srcData[y * srcWidth * 4 + x * 4];
+            activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 1] =
+              srcData[y * srcWidth * 4 + x * 4 + 1];
+            activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 2] =
+              srcData[y * srcWidth * 4 + x * 4 + 2];
+            activeData[(y + yOff) * dstWidth * 4 + (x + xOff) * 4 + 3] =
+              srcData[y * srcWidth * 4 + x * 4 + 3];
+          }
         }
       }
       this._mainCtx?.putImageData(activeBuffer, 0, 0);

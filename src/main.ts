@@ -16,9 +16,11 @@ const engine: Engine = Engine.getInstance();
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div xmlns="http://www.w3.org/1999/html">
-    <canvas id="mainCanvas" width="800px" height="600px">
-      Super fun canvas
-    </canvas>
+    <div>
+      <canvas id="mainCanvas" class="mainCanvas" width="800px" height="600px">
+        Super fun canvas
+      </canvas>
+    </div>
     <button id="stepButton"">Step</button>
     <button id="runButton"">Run</button>
   </div>
@@ -35,6 +37,7 @@ document.onreadystatechange = async () => {
     engine.init(
       document.getElementById("mainCanvas") as HTMLCanvasElement,
       "nc.png",
+      4,
     );
     stepButton.addEventListener("click", () => step(engine));
     runButton.addEventListener("click", () => run(engine));
